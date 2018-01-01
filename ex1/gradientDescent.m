@@ -18,11 +18,13 @@ for iter = 1:num_iters
     %
 
 
-    theta_1 = theta(1) - alpha * ( ones(1,m) * (X*theta-y) ) / m
-    theta_2 = theta(2) - alpha * ( ones(1,m) * ((X*theta-y).*X(:,2)) ) / m
+    %theta_1 = theta(1) - alpha * ( ones(1,m) * (X*theta-y) ) / m
+    %theta_2 = theta(2) - alpha * ( ones(1,m) * ((X*theta-y).*X(:,2)) ) / m
+           
+    %theta(1) = theta_1
+    %theta(2) = theta_2
     
-    theta(1) = theta_1
-    theta(2) = theta_2
+    theta = theta - alpha/m * [ ones(1,m) * (X*theta-y) ; ones(1,m) * ((X*theta-y).*X(:,2)) ]
 
 
 
