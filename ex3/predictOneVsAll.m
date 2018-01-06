@@ -30,10 +30,12 @@ X = [ones(m, 1) X];
 %       for each row.
 %       
 
+% Predict Y for all 5000 samples
+% size(X) =  [5000 400]
+% size(all_theta) = 10   401
 
-
-
-
+% max will return the max and index of max
+[max, p] = max(sigmoid(X * all_theta'), [], 2);
 
 
 % =========================================================================
