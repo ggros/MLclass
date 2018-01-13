@@ -87,14 +87,34 @@ H = sigmoid(layer1 * Theta2');
 
 %J = (1/m).*( -y'*log(h) - (1 - y)'*log(1 - h) )
 
-% loop over samples and sum cost
+% loop over samples and sum cost with for loops (v1)
+%{
 for i = 1:m
     for k = 1:num_labels
       J = J + ( -Y(i,k)*log(H(i,k)) - (1-Y(i,k))*log(1 - H(i,k)) );
     endfor
 endfor
 J = J/m;
+%}
 
+% calculate using element wise product and then sum all elements (to do it in one line)
+J = 1/m * sum(sum( -Y.*log(H) - (1-Y).*log(1 - H) ));
+
+%calculate regularization (skip col 1 which is weight for the bias)
+reg = lambda/(2*m) * ( sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)) );
+
+% sum(sum( can also be computed using ones()
+% http://stattrek.com/matrix-algebra/sum-of-elements.aspx
+%{
+t1Square = Theta1(:,2:end).^2;
+t2Square = Theta2(:,2:end).^2;
+reg = lambda/(2*m) * (...
+  ones(1, size(t1Square,1)) * t1Square * ones(size(t1Square,2), 1)...
+  +ones(1, size(t2Square,1)) * t2Square * ones(size(t2Square,2), 1)...
+);
+%}
+
+J = J + reg;
 
 % -------------------------------------------------------------
 
