@@ -63,21 +63,37 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
+% in the sample size(X) = 5000 400
+
+%recode y(i) to be a vector of size k with a 1 in the position of correct answer
+Y = [];
+for i = 1:num_labels
+  Y = [Y y == i];
+endfor
+% size(Y) = 5000 10
 
 
+% Add ones to the X data matrix -> 401 input for activation a1
+X = [ones(m, 1) X];
 
+% feed forward to calculate h(x)
+layer1 = sigmoid(X * Theta1');
 
+% Add ones in first column to the layer1 data matrix to get activation a2 for layer2
+layer1 = [ones(size(layer1, 1), 1) layer1];
 
+%calculate h(x) for each sample -> matrix H is 5000 10 (h is vector of size k, here k=10)
+H = sigmoid(layer1 * Theta2');
 
+%J = (1/m).*( -y'*log(h) - (1 - y)'*log(1 - h) )
 
-
-
-
-
-
-
-
-
+% loop over samples and sum cost
+for i = 1:m
+    for k = 1:num_labels
+      J = J + ( -Y(i,k)*log(H(i,k)) - (1-Y(i,k))*log(1 - H(i,k)) );
+    endfor
+endfor
+J = J/m;
 
 
 % -------------------------------------------------------------
