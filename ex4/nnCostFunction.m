@@ -72,19 +72,31 @@ for i = 1:num_labels
 endfor
 % size(Y) = 5000 10
 
+% ------------------------------
+% feed forward to calculate h(x)
+% ------------------------------
 
 % Add ones to the X data matrix -> 401 input for activation a1
-X = [ones(m, 1) X];
+A1 = [ones(m, 1) X];
 
-% feed forward to calculate h(x)
-layer1 = sigmoid(X * Theta1');
+Z2 = A1 * Theta1';
 
-% Add ones in first column to the layer1 data matrix to get activation a2 for layer2
-layer1 = [ones(size(layer1, 1), 1) layer1];
+% calculate activation a2
+A2 = [ones(size(Z2, 1), 1) sigmoid(Z2)];
 
-%calculate h(x) for each sample -> matrix H is 5000 10 (h is vector of size k, here k=10)
-H = sigmoid(layer1 * Theta2');
+% calculate Z for layer 3 = output layer
+Z3 = A2 * Theta2';
 
+%calculate h(x) for every sample -> matrix H is 5000 10 (h is vector of size k, here k=10)
+A3 = sigmoid(Z3);
+H = A3;
+
+
+% ------------------------------
+% Calculate cost function J
+% ------------------------------
+
+% from lrCostFunction of logistic regression
 %J = (1/m).*( -y'*log(h) - (1 - y)'*log(1 - h) )
 
 % loop over samples and sum cost with for loops (v1)
@@ -115,6 +127,25 @@ reg = lambda/(2*m) * (...
 %}
 
 J = J + reg;
+
+
+% ------------------------------
+% Backpropagation
+% ------------------------------
+
+% backpropagation using for loop
+for i = 1:m
+  delta_3 = (A3(i,:) - Y(i,:))'; % transpose to get a vector
+  delta_2 = (Theta2'*delta_3)(2:end) .* sigmoidGradient(Z2(i,:)');
+  
+  Theta2_grad = Theta2_grad + delta_3 * (A2(i,:));
+  Theta1_grad = Theta1_grad + delta_2 * (A1(i,:));
+  
+endfor
+
+Theta2_grad = 1/m * Theta2_grad;
+Theta1_grad = 1/m * Theta1_grad;
+
 
 % -------------------------------------------------------------
 
