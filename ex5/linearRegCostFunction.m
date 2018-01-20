@@ -19,15 +19,17 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
+% X is the change in water level, with one extra column of 1 (2 x 12)
+% theta for linear reg is only 2x1
+n = size(theta);
+h = X * theta;
+
+J = 1/(2*m) * sum((h - y).^2) + lambda/(2*m) * sum(theta(2:end).^2);
 
 
-
-
-
-
-
-
-
+%regularization all but theta 0
+reg = [ 0 ; ones(n-1,1)] * lambda / m;
+grad = (1/m) * ( X' * ( h - y )) + reg.*theta;
 
 
 % =========================================================================
