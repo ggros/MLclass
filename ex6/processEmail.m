@@ -97,21 +97,25 @@ while ~isempty(email_contents)
     %       str2). It will return 1 only if the two strings are equivalent.
     %
 
+    % search in vocabList
+    for i = 1: length(vocabList)
+      if(strcmp(str, vocabList{i}) == 1)
+        word_indices = [word_indices ; i];
+        %fprintf("""%s"" found at index %i\n",str,i);
+        break
+      end
+    end
 
-
-
-
-
-
-
-
+    % search using ismember and find (caveat: O(n) because go thru all words)
+    % i = find(ismember(vocabList, 'anyon'));
+    % word_indices = [word_indices ; i];
 
     % =============================================================
 
 
     % Print to screen, ensuring that the output lines are not too long
     if (l + length(str) + 1) > 78
-        fprintf('\n');
+        fprintf('\n');%if more than 78, print a carriage return
         l = 0;
     end
     fprintf('%s ', str);
