@@ -30,7 +30,9 @@ centroids = zeros(K, n);
 for(i=1:K)
   test = (idx == i); % test which have been assigned to this centroid
   nclosest = sum(test); % number of closest samples
-  centroids(i,:) = sum(test.*X)/nclosest; % take the mean
+  if(nclosest>0)
+    centroids(i,:) = sum(test.*X)/nclosest; % take the mean
+  end
 end
 
 % =============================================================
