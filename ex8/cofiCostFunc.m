@@ -46,18 +46,40 @@ J = sum(sum(C.^2.*R))/2;
 % for each movie i 
 % in sample 5 movies and size(X_grad) = 5 3 because we have 3 features
 for i = 1:num_movies
+  % find index of users who rated movie i
+  idx = find(R(i, :)==1);
+  Theta_temp = Theta(idx,:); % theta only for those users
+  Y_temp = Y(i,idx); % expected ratings for this movies and only users
+  % vectorized implementation
+  X_grad(i,:) = ( (X(i,:)*Theta_temp'-Y_temp)*Theta_temp )';
+  
+  % or to resuse C already calculated for J
+  X_grad(i,:) = ( C(i,idx)*Theta(idx,:) )';
+  
   % sum where users Rated movie i => R(i,:)
+  %{
   for k = 1:num_features
     X_grad(i,k) = (C(i,:).*R(i,:))*Theta(:,k);
   endfor
+  %}
 endfor
 
 % for each user j
 % in sample 4 users and size(Theta) = 4 3
 for j = 1:num_users
+  % find index of movies rated by users j
+  idx = find(R(:, j)==1);
+  X_temp = X(idx,:);
+  Y_temp = Y(idx,j);
+  Theta_grad(j,:) = (X_temp*Theta(j,:)'-Y_temp)'*X_temp;
+  
+  % reusing C
+  Theta_grad(j,:) = (C(idx,j))'*X_temp;
+  %{
   for k = 1:num_features
     Theta_grad(j,k) = (C(:,j).*R(:,j))'*X(:,k);
   endfor
+  %}
 endfor
 
 % =============================================================
