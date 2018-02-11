@@ -41,7 +41,10 @@ Theta_grad = zeros(size(Theta));
 %
 
 C = (X*Theta'-Y);
-J = sum(sum(C.^2.*R))/2;
+J = sum(sum(C.^2.*R))/2 ...
+    + lambda/2 * sum(Theta(:).^2) ...
+    + lambda/2 * sum(X(:).^2);
+    
 
 % for each movie i 
 % in sample 5 movies and size(X_grad) = 5 3 because we have 3 features
