@@ -40,11 +40,25 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
-C = (X*Theta'-Y).^2.*R;
-J = sum(C(:))/2;
+C = (X*Theta'-Y);
+J = sum(sum(C.^2.*R))/2;
 
+% for each movie i 
+% in sample 5 movies and size(X_grad) = 5 3 because we have 3 features
+for i = 1:num_movies
+  % sum where users Rated movie i => R(i,:)
+  for k = 1:num_features
+    X_grad(i,k) = (C(i,:).*R(i,:))*Theta(:,k);
+  endfor
+endfor
 
-
+% for each user j
+% in sample 4 users and size(Theta) = 4 3
+for j = 1:num_users
+  for k = 1:num_features
+    Theta_grad(j,k) = (C(:,j).*R(:,j))'*X(:,k);
+  endfor
+endfor
 
 % =============================================================
 
