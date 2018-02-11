@@ -57,7 +57,8 @@ for i = 1:num_movies
   X_grad(i,:) = ( (X(i,:)*Theta_temp'-Y_temp)*Theta_temp )';
   
   % or to resuse C already calculated for J
-  X_grad(i,:) = ( C(i,idx)*Theta(idx,:) )';
+  X_grad(i,:) = ( C(i,idx)*Theta(idx,:) ...
+                + lambda*X(i,:) )';
   
   % sum where users Rated movie i => R(i,:)
   %{
@@ -77,7 +78,8 @@ for j = 1:num_users
   Theta_grad(j,:) = (X_temp*Theta(j,:)'-Y_temp)'*X_temp;
   
   % reusing C
-  Theta_grad(j,:) = (C(idx,j))'*X_temp;
+  Theta_grad(j,:) = (C(idx,j))'*X_temp ...
+                + lambda*Theta(j,:);
   %{
   for k = 1:num_features
     Theta_grad(j,k) = (C(:,j).*R(:,j))'*X(:,k);
